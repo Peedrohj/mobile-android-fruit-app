@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Lista de Frutas</string>
+    <string name="fruit_description">Imagem da fruta</string>
+</resources>
