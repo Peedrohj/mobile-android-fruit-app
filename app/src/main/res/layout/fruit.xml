@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="Line"
+            android:text="Title"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -32,10 +32,11 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:id="@+id/fruit_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="Line 2"
+            android:text="Description"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/fruit_image"
             app:layout_constraintTop_toBottomOf="@+id/fruit_title" />
