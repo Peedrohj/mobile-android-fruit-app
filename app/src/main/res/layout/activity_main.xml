@@ -11,9 +11,10 @@
         android:id="@+id/fruit_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="16dp"
-        android:padding="10dp"
         android:clipToPadding="false"
-        tools:listitem="@layout/fruit"/>
+        android:scrollbars="horizontal"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="-16dp"
+        tools:listitem="@layout/fruit" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
