@@ -17,6 +17,7 @@ open class MainActivity : AppCompatActivity() {
 
     companion object {
         const val MAIN_ACTIVITY_FRUIT_RESULT_CODE = 1
+        const val MAIN_ACTIVITY_FRUIT_ID = "fruit"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,7 +45,7 @@ open class MainActivity : AppCompatActivity() {
 
 
         if(MAIN_ACTIVITY_FRUIT_RESULT_CODE == requestCode){
-            val fruit = intent.getParcelableExtra<FruitData>("fruit");
+            val fruit = data?.getParcelableExtra<FruitData>(MAIN_ACTIVITY_FRUIT_ID);
 
             println("Fruit: $fruit")
 
