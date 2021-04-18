@@ -47,19 +47,17 @@ open class MainActivity : AppCompatActivity() {
         if(MAIN_ACTIVITY_FRUIT_RESULT_CODE == requestCode){
             val fruit = data?.getParcelableExtra<FruitData>(MAIN_ACTIVITY_FRUIT_ID);
 
-            println("Fruit: $fruit")
 
             if (fruit != null) {
                 baseList.add(fruit)
             }
-
 
             adapter.notifyDataSetChanged()
         }
 
     }
 
-    fun insertItem(view: View){
+    fun goToInsertFruitActivity(view: View){
         val intent = Intent(this@MainActivity, SecondActivity::class.java)
         startActivityForResult(intent, 1)
     }
