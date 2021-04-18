@@ -6,10 +6,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.atividade1.data.FruitData
 import kotlinx.android.synthetic.main.fruit.view.*
 
 
-class FruitAdapter(private val fruitList: List<Fruit>) : RecyclerView.Adapter<FruitAdapter.FruitHolder>(){
+class FruitAdapter(private val fruitList: List<FruitData>) : RecyclerView.Adapter<FruitAdapter.FruitHolder>(){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FruitHolder {
         val fruitView = LayoutInflater.from(parent.context).inflate(R.layout.fruit, parent, false)
 
@@ -19,8 +20,8 @@ class FruitAdapter(private val fruitList: List<Fruit>) : RecyclerView.Adapter<Fr
     override fun onBindViewHolder(holder: FruitHolder, position: Int) {
         val currentItem = fruitList[position]
 
-        holder.imageView.setImageResource(currentItem.imageResource)
-        holder.titleView.text = currentItem.title
+        holder.imageView.setImageResource(currentItem.image)
+        holder.titleView.text = currentItem.name
         holder.descriptionView.text = currentItem.description
     }
 
