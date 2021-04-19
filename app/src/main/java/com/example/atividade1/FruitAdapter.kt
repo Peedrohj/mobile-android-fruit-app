@@ -20,7 +20,7 @@ class FruitAdapter(private val fruitList: List<FruitData>) : RecyclerView.Adapte
     override fun onBindViewHolder(holder: FruitHolder, position: Int) {
         val currentItem = fruitList[position]
 
-        holder.imageView.setImageResource(currentItem.image)
+        holder.imageView.setImageURI(currentItem.image)
         holder.titleView.text = currentItem.name
         holder.descriptionView.text = currentItem.description
     }
@@ -35,3 +35,5 @@ class FruitAdapter(private val fruitList: List<FruitData>) : RecyclerView.Adapte
         val descriptionView: TextView = fruitView.fruit_description
     }
 }
+
+

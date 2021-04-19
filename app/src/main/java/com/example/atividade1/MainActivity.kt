@@ -1,13 +1,13 @@
 package com.example.atividade1
 
 import android.content.Intent
-import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.atividade1.data.FruitData
 import kotlinx.android.synthetic.main.activity_main.*
+import java.net.URI
 
 
 open class MainActivity : AppCompatActivity() {
@@ -33,7 +33,7 @@ open class MainActivity : AppCompatActivity() {
         val list = ArrayList<FruitData>()
 
         for (i in 0 until size){
-            val item = FruitData(image=0, name = "Fruta: $i", description = "Uma descrição qualquer")
+            val item = FruitData( image = null,name = "Fruta: $i", description = "Uma descrição qualquer")
             list += item
         }
 
