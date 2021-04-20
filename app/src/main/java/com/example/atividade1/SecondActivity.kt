@@ -26,7 +26,7 @@ class SecondActivity : AppCompatActivity() {
             val name: String = fruit_name_input.text.toString()
             val description: String = fruit_description_input.text.toString()
             val returnIntent = Intent()
-            
+
             val fruit = FruitData(name = name, description = description, image = imageUri)
 
             returnIntent.putExtra(MainActivity.MAIN_ACTIVITY_FRUIT_ID, fruit)

@@ -4,37 +4,55 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.atividade1.data.FruitData
 import kotlinx.android.synthetic.main.activity_main.*
-import java.net.URI
 
 
-open class MainActivity : AppCompatActivity() {
-    private val baseList = generateBaseList(20)
-    private val adapter = FruitAdapter(baseList)
-
+open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener {
+    private var baseList: ArrayList<FruitData> = generateBaseList(3)
+    private val adapter = FruitAdapter(baseList, this)
+    val model: FruitViewModel by viewModels()
 
     companion object {
         const val MAIN_ACTIVITY_FRUIT_RESULT_CODE = 1
         const val MAIN_ACTIVITY_FRUIT_ID = "fruit"
+        const val FRUIT_STORE = "fruit"
+        const val DETAIL_FRUIT_ACTIVITY = 2
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        if (savedInstanceState != null) {
+            baseList = savedInstanceState.getParcelableArrayList(FRUIT_STORE)!!
+        }
+
         fruit_list.adapter = adapter
         fruit_list.layoutManager = LinearLayoutManager(this)
         fruit_list.setHasFixedSize(true)
+
+        model.getFruits().observe(this, Observer<List<FruitData>>{ fruits ->
+            baseList = fruits as ArrayList<FruitData>
+            adapter.notifyDataSetChanged()
+        })
+
     }
 
     private fun generateBaseList(size: Int): ArrayList<FruitData>{
         val list = ArrayList<FruitData>()
 
         for (i in 0 until size){
-            val item = FruitData( image = null,name = "Fruta: $i", description = "Uma descrição qualquer")
+            val item = FruitData(
+                image = null,
+                name = "Fruta: $i",
+                description = "Uma descrição qualquer"
+            )
             list += item
         }
 
@@ -44,18 +62,13 @@ open class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-
         if(MAIN_ACTIVITY_FRUIT_RESULT_CODE == requestCode){
-            val fruit = data?.getParcelableExtra<FruitData>(MAIN_ACTIVITY_FRUIT_ID);
-
+            val fruit: FruitData? = data?.getParcelableExtra<FruitData>(MAIN_ACTIVITY_FRUIT_ID);
 
             if (fruit != null) {
-                baseList.add(fruit)
+                addFruit(fruit)
             }
-
-            adapter.notifyDataSetChanged()
         }
-
     }
 
     fun goToInsertFruitActivity(view: View){
@@ -63,5 +76,31 @@ open class MainActivity : AppCompatActivity() {
         startActivityForResult(intent, 1)
     }
 
-    fun removeItem(view: View){}
+    private fun addFruit(fruit: FruitData){
+        if (fruit != null) {
+            baseList.add(fruit)
+        }
+
+        adapter.notifyDataSetChanged()
+    }
+
+    override fun onSaveInstanceState(savedInstanceState: Bundle) {
+        savedInstanceState.putParcelableArrayList(FRUIT_STORE, baseList)
+        super.onSaveInstanceState(savedInstanceState)
+    }
+
+    private fun removeItem(index: Int){
+        baseList.removeAt(index)
+
+        adapter.notifyDataSetChanged()
+    }
+
+    override fun onItemClick(position: Int) {
+        Toast.makeText(this, "Item $position clicked", Toast.LENGTH_SHORT).show()
+        val clickedItem: FruitData = baseList[position]
+
+        val intent = Intent(this@MainActivity, FruitActivity::class.java)
+        intent.putExtra(MainActivity.MAIN_ACTIVITY_FRUIT_ID, clickedItem)
+        startActivityForResult(intent, 1)
+    }
 }

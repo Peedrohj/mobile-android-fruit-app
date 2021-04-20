@@ -10,7 +10,7 @@ import com.example.atividade1.data.FruitData
 import kotlinx.android.synthetic.main.fruit.view.*
 
 
-class FruitAdapter(private val fruitList: List<FruitData>) : RecyclerView.Adapter<FruitAdapter.FruitHolder>(){
+class FruitAdapter(private val fruitList: List<FruitData>, private val listener: OnItemClickListener) : RecyclerView.Adapter<FruitAdapter.FruitHolder>(){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FruitHolder {
         val fruitView = LayoutInflater.from(parent.context).inflate(R.layout.fruit, parent, false)
 
@@ -29,10 +29,26 @@ class FruitAdapter(private val fruitList: List<FruitData>) : RecyclerView.Adapte
         return fruitList.size
     }
 
-    class FruitHolder(fruitView: View): RecyclerView.ViewHolder(fruitView) {
+    inner class FruitHolder(fruitView: View): RecyclerView.ViewHolder(fruitView), View.OnClickListener {
         val imageView: ImageView = fruitView.fruit_image
         val titleView: TextView = fruitView.fruit_title
         val descriptionView: TextView = fruitView.fruit_description
+
+        init {
+            itemView.setOnClickListener(this)
+        }
+
+        override fun onClick(v: View?) {
+            val position: Int = adapterPosition
+            if(position != RecyclerView.NO_POSITION){
+                listener.onItemClick(position)
+
+            }
+        }
+    }
+
+    interface OnItemClickListener{
+        fun onItemClick(position: Int)
     }
 }
 
