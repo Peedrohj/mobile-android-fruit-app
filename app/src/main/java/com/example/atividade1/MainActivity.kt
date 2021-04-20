@@ -16,7 +16,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener {
     private var baseList: ArrayList<FruitData> = generateBaseList(3)
     private val adapter = FruitAdapter(baseList, this)
-    val model: FruitViewModel by viewModels()
 
     companion object {
         const val MAIN_ACTIVITY_FRUIT_RESULT_CODE = 1
@@ -37,12 +36,6 @@ open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener 
         fruit_list.adapter = adapter
         fruit_list.layoutManager = LinearLayoutManager(this)
         fruit_list.setHasFixedSize(true)
-
-        model.getFruits().observe(this, Observer<List<FruitData>>{ fruits ->
-            baseList = fruits as ArrayList<FruitData>
-            adapter.notifyDataSetChanged()
-        })
-
     }
 
     private fun generateBaseList(size: Int): ArrayList<FruitData>{
@@ -108,7 +101,6 @@ open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener 
 
         val intent = Intent(this@MainActivity, FruitActivity::class.java)
 
-        println("DEBUG POSITION IN MAIN: $position")
         intent.putExtra(MainActivity.MAIN_ACTIVITY_FRUIT_ID, clickedItem)
         intent.putExtra(MainActivity.MAIN_ACTIVITY_POSITION_ID, position)
         startActivityForResult(intent, DETAIL_FRUIT_ACTIVITY)
