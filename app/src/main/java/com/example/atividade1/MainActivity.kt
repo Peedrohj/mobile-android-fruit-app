@@ -21,6 +21,7 @@ open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener 
     companion object {
         const val MAIN_ACTIVITY_FRUIT_RESULT_CODE = 1
         const val MAIN_ACTIVITY_FRUIT_ID = "fruit"
+        const val MAIN_ACTIVITY_POSITION_ID = "position"
         const val FRUIT_STORE = "fruit"
         const val DETAIL_FRUIT_ACTIVITY = 2
     }
@@ -62,11 +63,17 @@ open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if(MAIN_ACTIVITY_FRUIT_RESULT_CODE == requestCode){
+        if(requestCode == MAIN_ACTIVITY_FRUIT_RESULT_CODE ){
             val fruit: FruitData? = data?.getParcelableExtra<FruitData>(MAIN_ACTIVITY_FRUIT_ID);
 
             if (fruit != null) {
                 addFruit(fruit)
+            }
+        }else if (requestCode == DETAIL_FRUIT_ACTIVITY){
+            val position: Int? = data?.getIntExtra(MAIN_ACTIVITY_POSITION_ID, 0)
+
+            if (position != null){
+                removeFruit(position)
             }
         }
     }
@@ -89,7 +96,7 @@ open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener 
         super.onSaveInstanceState(savedInstanceState)
     }
 
-    private fun removeItem(index: Int){
+    private fun removeFruit(index: Int){
         baseList.removeAt(index)
 
         adapter.notifyDataSetChanged()
@@ -100,7 +107,10 @@ open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener 
         val clickedItem: FruitData = baseList[position]
 
         val intent = Intent(this@MainActivity, FruitActivity::class.java)
+
+        println("DEBUG POSITION IN MAIN: $position")
         intent.putExtra(MainActivity.MAIN_ACTIVITY_FRUIT_ID, clickedItem)
-        startActivityForResult(intent, 1)
+        intent.putExtra(MainActivity.MAIN_ACTIVITY_POSITION_ID, position)
+        startActivityForResult(intent, DETAIL_FRUIT_ACTIVITY)
     }
 }
