@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,7 +15,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 
 open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener {
-    private var baseList: ArrayList<FruitData> = generateBaseList(3)
+    private var baseList: ArrayList<FruitData> = generateBaseList(15)
     private val adapter = FruitAdapter(baseList, this)
 
     companion object {
@@ -28,14 +29,13 @@ open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        if (savedInstanceState != null) {
-            baseList = savedInstanceState.getParcelableArrayList(FRUIT_STORE)!!
-        }
+        val toolbar: Toolbar = findViewById(R.id.customToolbar)
 
         fruit_list.adapter = adapter
         fruit_list.layoutManager = LinearLayoutManager(this)
         fruit_list.setHasFixedSize(true)
+
+        setSupportActionBar(toolbar)
     }
 
     private fun generateBaseList(size: Int): ArrayList<FruitData>{
@@ -84,11 +84,6 @@ open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener 
         adapter.notifyDataSetChanged()
     }
 
-    override fun onSaveInstanceState(savedInstanceState: Bundle) {
-        savedInstanceState.putParcelableArrayList(FRUIT_STORE, baseList)
-        super.onSaveInstanceState(savedInstanceState)
-    }
-
     private fun removeFruit(index: Int){
         baseList.removeAt(index)
 
@@ -96,7 +91,6 @@ open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener 
     }
 
     override fun onItemClick(position: Int) {
-        Toast.makeText(this, "Item $position clicked", Toast.LENGTH_SHORT).show()
         val clickedItem: FruitData = baseList[position]
 
         val intent = Intent(this@MainActivity, FruitActivity::class.java)
