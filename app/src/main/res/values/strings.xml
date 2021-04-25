@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Lista de Frutas</string>
-    <string name="fruit_description">Imagem da fruta</string>
+    <string name="fruit_image">Imagem da fruta</string>
     <string name="add_button">Adicionar fruta</string>
-
+    <string name="add_image">Adicionar uma imagem</string>
+    <string name="fruit_description">Descrição da fruta</string>
+    <string name="fruit_name">Nome da fruta</string>
+    <string name="add_fruit">Adicionar uma fruta</string>
 </resources>

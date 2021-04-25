@@ -38,6 +38,8 @@ class SecondActivity : AppCompatActivity() {
             val gallery = Intent(Intent.ACTION_OPEN_DOCUMENT, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
             startActivityForResult(gallery, RESULT_CODE)
         }
+        setSupportActionBar(findViewById(R.id.customToolbar))
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

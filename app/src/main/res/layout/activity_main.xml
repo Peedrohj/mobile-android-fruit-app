@@ -49,7 +49,7 @@
             android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar"
             app:layout_scrollFlags="scroll|enterAlways"
             app:title="@string/app_name"
-            app:titleTextColor="#F1F1F1" />
+            app:titleTextColor="#F1DEDE" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

@@ -29,13 +29,12 @@ open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val toolbar: Toolbar = findViewById(R.id.customToolbar)
 
         fruit_list.adapter = adapter
         fruit_list.layoutManager = LinearLayoutManager(this)
         fruit_list.setHasFixedSize(true)
 
-        setSupportActionBar(toolbar)
+        setSupportActionBar(findViewById(R.id.customToolbar))
     }
 
     private fun generateBaseList(size: Int): ArrayList<FruitData>{
