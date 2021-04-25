@@ -44,7 +44,7 @@ open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener 
             val item = FruitData(
                 image = null,
                 name = "Fruta: $i",
-                description = "Uma descrição qualquer"
+                description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec finibus orci non orci fermentum, sed molestie neque tempor. Aliquam condimentum nulla non congue sollicitudin"
             )
             list += item
         }
