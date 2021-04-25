@@ -1,10 +1,12 @@
 package com.example.atividade1
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Switch
 
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -12,13 +14,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.atividade1.data.FruitData
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.custom_dialog.*
+import java.util.zip.Inflater
 
 
 open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener {
     private var baseList: ArrayList<FruitData> = generateBaseList(5)
     private val adapter = FruitAdapter(baseList, this)
-    private val options = arrayOf("Frutas com o mesmo nome devem ser exibidas", "Ordem alfabética", "Ordem por inserção")
-    private val selectedOptions = booleanArrayOf(true, false, true)
+    private var fruitsWithSameName: Boolean = true
+    private var selectedOption = 0
 
     companion object {
         const val MAIN_ACTIVITY_FRUIT_RESULT_CODE = 1
@@ -40,15 +44,15 @@ open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener 
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.toolbar_menu, menu);
+        menuInflater.inflate(R.menu.toolbar_menu, menu)
 
         return true
     }
 
-    private fun generateBaseList(size: Int): ArrayList<FruitData>{
+    private fun generateBaseList(size: Int): ArrayList<FruitData> {
         val list = ArrayList<FruitData>()
 
-        for (i in 0 until size){
+        for (i in 0 until size) {
             val item = FruitData(
                 image = null,
                 name = "Fruta: $i",
@@ -57,33 +61,33 @@ open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener 
             list += item
         }
 
-        return  list
+        return list
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if(requestCode == MAIN_ACTIVITY_FRUIT_RESULT_CODE ){
-            val fruit: FruitData? = data?.getParcelableExtra<FruitData>(MAIN_ACTIVITY_FRUIT_ID);
+        if (requestCode == MAIN_ACTIVITY_FRUIT_RESULT_CODE) {
+            val fruit: FruitData? = data?.getParcelableExtra<FruitData>(MAIN_ACTIVITY_FRUIT_ID)
 
             if (fruit != null) {
                 addFruit(fruit)
             }
-        }else if (requestCode == DETAIL_FRUIT_ACTIVITY){
+        } else if (requestCode == DETAIL_FRUIT_ACTIVITY) {
             val position: Int? = data?.getIntExtra(MAIN_ACTIVITY_POSITION_ID, 0)
 
-            if (position != null){
+            if (position != null) {
                 removeFruit(position)
             }
         }
     }
 
-    fun goToInsertFruitActivity(view: View){
+    fun goToInsertFruitActivity(view: View) {
         val intent = Intent(this@MainActivity, SecondActivity::class.java)
         startActivityForResult(intent, 1)
     }
 
-    private fun addFruit(fruit: FruitData){
+    private fun addFruit(fruit: FruitData) {
         if (fruit != null) {
             baseList.add(fruit)
         }
@@ -91,7 +95,7 @@ open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener 
         adapter.notifyDataSetChanged()
     }
 
-    private fun removeFruit(index: Int){
+    private fun removeFruit(index: Int) {
         baseList.removeAt(index)
 
         adapter.notifyDataSetChanged()
@@ -109,20 +113,33 @@ open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
         R.id.action_filter -> {
-            println("DEBUG function called ${item.itemId}, ${R.id.action_filter}")
-
-            val builder = AlertDialog.Builder(this )
+            val builder = AlertDialog.Builder(this)
+            val options = arrayOf(getString(R.string.filter_lexical_order), getString(R.string.filter_insertion_order))
 
             builder.setTitle(getString(R.string.filter_fruits))
-            builder.setMultiChoiceItems(options, selectedOptions){dialog, which, isChecked ->
-                selectedOptions[which] = isChecked
-            }
+            builder.setSingleChoiceItems(options, selectedOption, DialogInterface.OnClickListener { dialog, which ->
+                selectedOption = which
+            })
+            val customDialog: View = layoutInflater.inflate(
+                R.layout.custom_dialog, // Custom view/ layout
+                null, // Root layout to attach the view
+                false // Attach with root layout or not
+            )
 
-            builder.setPositiveButton(getString(R.string.ok)){ dialog, which ->  true}
+            var switch = customDialog.findViewById<Switch>(R.id.fruits_same_name)
+            switch.isChecked = fruitsWithSameName
+            builder.setView(customDialog)
 
-            builder.show();
+            builder.setPositiveButton(
+                getString(R.string.ok),
+                DialogInterface.OnClickListener { dialog, which ->
+                    fruitsWithSameName = switch.isChecked()
+                    
+
+                })
+
+            builder.show()
             true
-
         }
 
         else -> {
