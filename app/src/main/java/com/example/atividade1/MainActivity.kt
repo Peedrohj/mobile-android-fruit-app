@@ -2,21 +2,23 @@ package com.example.atividade1
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
-import androidx.activity.viewModels
+
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.atividade1.data.FruitData
 import kotlinx.android.synthetic.main.activity_main.*
 
 
 open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener {
-    private var baseList: ArrayList<FruitData> = generateBaseList(15)
+    private var baseList: ArrayList<FruitData> = generateBaseList(5)
     private val adapter = FruitAdapter(baseList, this)
+    private val options = arrayOf("Frutas com o mesmo nome devem ser exibidas", "Ordem alfabética", "Ordem por inserção")
+    private val selectedOptions = booleanArrayOf(true, false, true)
 
     companion object {
         const val MAIN_ACTIVITY_FRUIT_RESULT_CODE = 1
@@ -37,6 +39,12 @@ open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener 
         setSupportActionBar(findViewById(R.id.customToolbar))
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.toolbar_menu, menu);
+
+        return true
+    }
+
     private fun generateBaseList(size: Int): ArrayList<FruitData>{
         val list = ArrayList<FruitData>()
 
@@ -44,7 +52,7 @@ open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener 
             val item = FruitData(
                 image = null,
                 name = "Fruta: $i",
-                description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec finibus orci non orci fermentum, sed molestie neque tempor. Aliquam condimentum nulla non congue sollicitudin"
+                description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec finibus orci non orci fermentum, sed molestie neque tempor. Aliquam condimentum nulla non congue sollicitudin \n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Donec finibus orci non orci fermentum, sed molestie neque tempor. Aliquam condimentum nulla non congue sollicitudin"
             )
             list += item
         }
@@ -97,5 +105,28 @@ open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener 
         intent.putExtra(MainActivity.MAIN_ACTIVITY_FRUIT_ID, clickedItem)
         intent.putExtra(MainActivity.MAIN_ACTIVITY_POSITION_ID, position)
         startActivityForResult(intent, DETAIL_FRUIT_ACTIVITY)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+        R.id.action_filter -> {
+            println("DEBUG function called ${item.itemId}, ${R.id.action_filter}")
+
+            val builder = AlertDialog.Builder(this )
+
+            builder.setTitle(getString(R.string.filter_fruits))
+            builder.setMultiChoiceItems(options, selectedOptions){dialog, which, isChecked ->
+                selectedOptions[which] = isChecked
+            }
+
+            builder.setPositiveButton(getString(R.string.ok)){ dialog, which ->  true}
+
+            builder.show();
+            true
+
+        }
+
+        else -> {
+            super.onOptionsItemSelected(item)
+        }
     }
 }
