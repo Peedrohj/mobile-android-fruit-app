@@ -15,9 +15,15 @@ class FruitActivity : AppCompatActivity() {
         val position: Int? = intent.getIntExtra(MainActivity.MAIN_ACTIVITY_POSITION_ID, 0)
 
         if (fruit != null) {
-            fruit_name.text = fruit.name
+            customToolbar.title = fruit.name
             fruit_description.text = fruit.description
-            fruit_image.setImageURI(fruit.image)
+
+            if(fruit.image != null){
+                fruit_image.setImageURI(fruit.image)
+
+            }else{
+                fruit_image.setImageResource(R.drawable.ic_default_image)
+            }
         }
 
         delete_button.setOnClickListener {
@@ -28,5 +34,8 @@ class FruitActivity : AppCompatActivity() {
             setResult(MainActivity.DETAIL_FRUIT_ACTIVITY, returnIntent)
             finish()
         }
+
+        setSupportActionBar(findViewById(R.id.customToolbar))
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 }
