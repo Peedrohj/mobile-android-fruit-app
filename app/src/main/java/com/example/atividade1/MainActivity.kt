@@ -60,7 +60,7 @@ open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener 
         for (i in 0 until size) {
             val item = FruitData(
                 image = null,
-                name = "Fruta: ",
+                name = "Fruta: $i",
                 description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec finibus orci non orci fermentum, sed molestie neque tempor. Aliquam condimentum nulla non congue sollicitudin \n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Donec finibus orci non orci fermentum, sed molestie neque tempor. Aliquam condimentum nulla non congue sollicitudin"
             )
             list += item
@@ -98,7 +98,6 @@ open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener 
             originalList.add(fruit)
         }
 
-
         adapter.notifyDataSetChanged()
     }
 
@@ -109,7 +108,7 @@ open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener 
         adapter.notifyDataSetChanged()
     }
 
-    private fun filterRepeatedName(){
+    private fun filterRepeatedName() {
         println("DEBUG $originalList")
 
         val notRepetedList = originalList.toSet().toList()
@@ -117,6 +116,10 @@ open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener 
         baseList.removeAll(baseList)
         baseList.addAll(notRepetedList)
         adapter.notifyDataSetChanged()
+    }
+
+    private fun alphabeticalOrder() {
+
     }
 
     override fun onItemClick(position: Int) {
@@ -131,12 +134,18 @@ open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
         R.id.action_filter -> {
             val builder = AlertDialog.Builder(this)
-            val options = arrayOf(getString(R.string.filter_lexical_order), getString(R.string.filter_insertion_order))
+            val options = arrayOf(
+                getString(R.string.filter_alphabetical_order),
+                getString(R.string.filter_insertion_order)
+            )
 
             builder.setTitle(getString(R.string.filter_fruits))
-            builder.setSingleChoiceItems(options, selectedOption, DialogInterface.OnClickListener { dialog, which ->
-                selectedOption = which
-            })
+            builder.setSingleChoiceItems(
+                options,
+                selectedOption,
+                DialogInterface.OnClickListener { dialog, which ->
+                    selectedOption = which
+                })
 
             val customDialog: View = layoutInflater.inflate(
                 R.layout.custom_dialog, // Custom view/ layout
@@ -154,15 +163,16 @@ open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener 
                 DialogInterface.OnClickListener { dialog, which ->
                     fruitsWithSameName = switch.isChecked()
 
-                    if (!fruitsWithSameName){
+                    if (!fruitsWithSameName) {
                         filterRepeatedName()
-                    }else
-                    {
+                    } else {
                         baseList.removeAll(baseList)
                         baseList.addAll(originalList)
                         adapter.notifyDataSetChanged()
                     }
                 })
+
+            builder.setNegativeButton(getString(R.string.cancel), DialogInterface.OnClickListener { dialog, which -> true})
 
             builder.show()
             true

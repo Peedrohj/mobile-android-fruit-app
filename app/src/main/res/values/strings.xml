@@ -11,6 +11,7 @@
     <string name="ok">Ok</string>
     <string name="filter_fruits">Filtrar frutas</string>
     <string name="filter_fruits_same_name">Frutas com o mesmo nome</string>
-    <string name="filter_lexical_order">Ordem alfabética</string>
+    <string name="filter_alphabetical_order">Ordem alfabética</string>
     <string name="filter_insertion_order">Ordem por inserção</string>
+    <string name="cancel">Cancelar</string>
 </resources>
