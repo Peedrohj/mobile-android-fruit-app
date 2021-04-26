@@ -15,12 +15,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.atividade1.data.FruitData
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.custom_dialog.*
+import java.nio.channels.Selector
 import java.util.zip.Inflater
 
 
 open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener {
     private var baseList: ArrayList<FruitData> = generateBaseList(5)
-    private val adapter = FruitAdapter(baseList, this)
+    private var originalList: ArrayList<FruitData> = generateBaseList(0)
+
+    private var adapter = FruitAdapter(baseList, this)
     private var fruitsWithSameName: Boolean = true
     private var selectedOption = 0
 
@@ -40,6 +43,8 @@ open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener 
         fruit_list.layoutManager = LinearLayoutManager(this)
         fruit_list.setHasFixedSize(true)
 
+        originalList.addAll(baseList)
+
         setSupportActionBar(findViewById(R.id.customToolbar))
     }
 
@@ -55,7 +60,7 @@ open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener 
         for (i in 0 until size) {
             val item = FruitData(
                 image = null,
-                name = "Fruta: $i",
+                name = "Fruta: ",
                 description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec finibus orci non orci fermentum, sed molestie neque tempor. Aliquam condimentum nulla non congue sollicitudin \n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Donec finibus orci non orci fermentum, sed molestie neque tempor. Aliquam condimentum nulla non congue sollicitudin"
             )
             list += item
@@ -90,20 +95,32 @@ open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener 
     private fun addFruit(fruit: FruitData) {
         if (fruit != null) {
             baseList.add(fruit)
+            originalList.add(fruit)
         }
+
 
         adapter.notifyDataSetChanged()
     }
 
     private fun removeFruit(index: Int) {
         baseList.removeAt(index)
+        originalList.removeAt(index)
 
+        adapter.notifyDataSetChanged()
+    }
+
+    private fun filterRepeatedName(){
+        println("DEBUG $originalList")
+
+        val notRepetedList = originalList.toSet().toList()
+
+        baseList.removeAll(baseList)
+        baseList.addAll(notRepetedList)
         adapter.notifyDataSetChanged()
     }
 
     override fun onItemClick(position: Int) {
         val clickedItem: FruitData = baseList[position]
-
         val intent = Intent(this@MainActivity, FruitActivity::class.java)
 
         intent.putExtra(MainActivity.MAIN_ACTIVITY_FRUIT_ID, clickedItem)
@@ -120,6 +137,7 @@ open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener 
             builder.setSingleChoiceItems(options, selectedOption, DialogInterface.OnClickListener { dialog, which ->
                 selectedOption = which
             })
+
             val customDialog: View = layoutInflater.inflate(
                 R.layout.custom_dialog, // Custom view/ layout
                 null, // Root layout to attach the view
@@ -128,14 +146,22 @@ open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener 
 
             var switch = customDialog.findViewById<Switch>(R.id.fruits_same_name)
             switch.isChecked = fruitsWithSameName
+
             builder.setView(customDialog)
 
             builder.setPositiveButton(
                 getString(R.string.ok),
                 DialogInterface.OnClickListener { dialog, which ->
                     fruitsWithSameName = switch.isChecked()
-                    
 
+                    if (!fruitsWithSameName){
+                        filterRepeatedName()
+                    }else
+                    {
+                        baseList.removeAll(baseList)
+                        baseList.addAll(originalList)
+                        adapter.notifyDataSetChanged()
+                    }
                 })
 
             builder.show()
