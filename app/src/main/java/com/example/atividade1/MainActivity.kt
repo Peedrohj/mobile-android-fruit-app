@@ -59,8 +59,8 @@ open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener 
         for (i in 0 until size) {
             val item = FruitData(
                 image = null,
-                name = "Fruta: ",
-                description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec finibus orci non orci fermentum, sed molestie neque tempor. Aliquam condimentum nulla non congue sollicitudin \n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Donec finibus orci non orci fermentum, sed molestie neque tempor. Aliquam condimentum nulla non congue sollicitudin"
+                name = "Fruta: $i",
+                description = "Lorem $i ipsum dolor sit amet, consectetur adipiscing elit. Donec finibus orci non orci fermentum, sed molestie neque tempor. Aliquam condimentum nulla non congue sollicitudin \n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Donec finibus orci non orci fermentum, sed molestie neque tempor. Aliquam condimentum nulla non congue sollicitudin"
             )
             list += item
         }
@@ -120,7 +120,7 @@ open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener 
     }
 
     private fun alphabeticalOrder() {
-        var sortedList = baseList.shuffled()
+        var sortedList = baseList.sortedBy { it.name.toString() }
 
         println("Sorted List: $sortedList")
         baseList.removeAll(baseList)
