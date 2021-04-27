@@ -3,6 +3,7 @@ package com.example.atividade1
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
 import com.example.atividade1.data.FruitData
 import kotlinx.android.synthetic.main.activity_fruit.*
 
@@ -37,5 +38,9 @@ class FruitActivity : AppCompatActivity() {
 
         setSupportActionBar(findViewById(R.id.customToolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        finish()
+        return super.onOptionsItemSelected(item)
     }
 }

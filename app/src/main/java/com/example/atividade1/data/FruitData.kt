@@ -9,8 +9,4 @@ data class FruitData(
     val name: String,
     val description: String,
     val image: Uri?
-): Parcelable{
-    override fun toString(): String {
-        return "$name"
-    }
-}
+): Parcelable

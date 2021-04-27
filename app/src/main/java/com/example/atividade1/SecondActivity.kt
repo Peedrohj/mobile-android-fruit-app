@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.MenuItem
 
 import androidx.appcompat.app.AppCompatActivity
 import com.example.atividade1.data.FruitData
@@ -54,5 +55,9 @@ class SecondActivity : AppCompatActivity() {
             imageUri?.let{contentResolver.takePersistableUriPermission(it, modelFlags)}
 
         }
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        finish()
+        return super.onOptionsItemSelected(item)
     }
 }

@@ -25,13 +25,12 @@ open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener 
 
     private var adapter = FruitAdapter(baseList, this)
     private var fruitsWithSameName: Boolean = true
-    private var selectedOption = 0
+    private var selectedOption = 1
 
     companion object {
         const val MAIN_ACTIVITY_FRUIT_RESULT_CODE = 1
         const val MAIN_ACTIVITY_FRUIT_ID = "fruit"
         const val MAIN_ACTIVITY_POSITION_ID = "position"
-        const val FRUIT_STORE = "fruit"
         const val DETAIL_FRUIT_ACTIVITY = 2
     }
 
@@ -60,7 +59,7 @@ open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener 
         for (i in 0 until size) {
             val item = FruitData(
                 image = null,
-                name = "Fruta: $i",
+                name = "Fruta: ",
                 description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec finibus orci non orci fermentum, sed molestie neque tempor. Aliquam condimentum nulla non congue sollicitudin \n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Donec finibus orci non orci fermentum, sed molestie neque tempor. Aliquam condimentum nulla non congue sollicitudin"
             )
             list += item
@@ -102,24 +101,30 @@ open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener 
     }
 
     private fun removeFruit(index: Int) {
+        val removedItem = baseList[index]
+        val originalIndex = originalList.indexOf(originalList.find { it ->
+            it.name == removedItem.name && it.description == removedItem.description && it.image == removedItem.image
+        })
+
         baseList.removeAt(index)
-        originalList.removeAt(index)
+        originalList.removeAt(originalIndex)
 
         adapter.notifyDataSetChanged()
     }
 
     private fun filterRepeatedName() {
-        println("DEBUG $originalList")
-
-        val notRepetedList = originalList.toSet().toList()
+        val notRepetedList = baseList.toSet().toList()
 
         baseList.removeAll(baseList)
         baseList.addAll(notRepetedList)
-        adapter.notifyDataSetChanged()
     }
 
     private fun alphabeticalOrder() {
+        var sortedList = baseList.shuffled()
 
+        println("Sorted List: $sortedList")
+        baseList.removeAll(baseList)
+        baseList.addAll(sortedList)
     }
 
     override fun onItemClick(position: Int) {
@@ -163,16 +168,40 @@ open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener 
                 DialogInterface.OnClickListener { dialog, which ->
                     fruitsWithSameName = switch.isChecked()
 
-                    if (!fruitsWithSameName) {
+                    if (!fruitsWithSameName && selectedOption == 0) {
                         filterRepeatedName()
-                    } else {
+                        alphabeticalOrder()
+                    }
+
+                    if (!fruitsWithSameName && selectedOption == 1) {
                         baseList.removeAll(baseList)
                         baseList.addAll(originalList)
-                        adapter.notifyDataSetChanged()
+
+                        filterRepeatedName()
                     }
+
+                    if (!fruitsWithSameName) {
+                        filterRepeatedName()
+                    }
+
+                    if (selectedOption == 0 && fruitsWithSameName) {
+                        baseList.removeAll(baseList)
+                        baseList.addAll(originalList)
+
+                        alphabeticalOrder()
+                    }
+
+                    if (selectedOption == 1 && fruitsWithSameName) {
+                        baseList.removeAll(baseList)
+                        baseList.addAll(originalList)
+                    }
+
+                    adapter.notifyDataSetChanged()
                 })
 
-            builder.setNegativeButton(getString(R.string.cancel), DialogInterface.OnClickListener { dialog, which -> true})
+            builder.setNegativeButton(
+                getString(R.string.cancel),
+                DialogInterface.OnClickListener { dialog, which -> true })
 
             builder.show()
             true
