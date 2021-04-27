@@ -59,7 +59,7 @@ open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener 
         for (i in 0 until size) {
             val item = FruitData(
                 image = null,
-                name = "Fruta: $i",
+                name = "Fruta: ",
                 description = "Lorem $i ipsum dolor sit amet, consectetur adipiscing elit. Donec finibus orci non orci fermentum, sed molestie neque tempor. Aliquam condimentum nulla non congue sollicitudin \n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Donec finibus orci non orci fermentum, sed molestie neque tempor. Aliquam condimentum nulla non congue sollicitudin"
             )
             list += item
@@ -113,7 +113,7 @@ open class MainActivity : AppCompatActivity(), FruitAdapter.OnItemClickListener 
     }
 
     private fun filterRepeatedName() {
-        val notRepetedList = baseList.toSet().toList()
+        val notRepetedList = baseList.distinctBy { it.name.toString() }
 
         baseList.removeAll(baseList)
         baseList.addAll(notRepetedList)
